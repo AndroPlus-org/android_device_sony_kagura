@@ -1,10 +1,4 @@
-TARGET_NO_RADIOIMAGE := true
-TARGET_NO_BOOTLOADER := true
-TARGET_NO_RECOVERY := false
-TARGET_NO_KERNEL := false
-
 # Bootloader
-#TARGET_BOOTLOADER_BOARD_NAME := MSM8996
 TARGET_BOOTLOADER_BOARD_NAME := F8831
 
 # Platform
@@ -31,12 +25,6 @@ TARGET_NO_RECOVERY := false
 TARGET_NO_KERNEL := false
 
 TARGET_USES_ION := true
-
-# common cmdline parameters
-BOARD_KERNEL_CMDLINE += user_debug=31 androidboot.selinux=permissive
-BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x3F ehci-hcd.park=3
-BOARD_KERNEL_CMDLINE += dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y
-BOARD_KERNEL_CMDLINE += coherent_pool=8M
 
 # GFX
 USE_OPENGL_RENDERER := true
@@ -107,9 +95,6 @@ TARGET_RECOVERY_QCOM_RTC_FIX := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TARGET_RECOVERY_DEVICE_MODULES := libbinder libgui libui libEGL libGLES_trace libGLESv2 libprotobuf-cpp-lite libsync
 TW_RECOVERY_ADDITIONAL_RELINK_FILES := $(OUT)/system/lib64/libbinder.so $(OUT)/system/lib64/libgui.so $(OUT)/system/lib64/libui.so $(OUT)/system/lib64/libEGL.so $(OUT)/system/lib64/libGLES_trace.so $(OUT)/system/lib64/libGLESv2.so $(OUT)/system/lib64/libprotobuf-cpp-lite.so $(OUT)/system/lib64/libsync.so
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom
-BOARD_KERNEL_CMDLINE += user_debug=31 msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1
-BOARD_KERNEL_CMDLINE += cma=16M@0-0xffffffff coherent_pool=2M enforcing=0 androidboot.selinux=permissive
 
 # Include path
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
