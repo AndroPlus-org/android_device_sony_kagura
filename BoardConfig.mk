@@ -1,3 +1,6 @@
+# Board device path
+DEVICE_PATH := device/sony/kagura
+
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := F8831
 
@@ -59,7 +62,7 @@ TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 TARGET_KERNEL_MODULES := true
 BOARD_KERNEL_IMAGE_NAME := kernel
-TARGET_PREBUILT_KERNEL := device/sony/kagura/kernel
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/kernel
 
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 5513412608
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 57436708864
@@ -81,7 +84,7 @@ BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_HW_DISK_ENCRYPTION := true
 
 RECOVERY_SDCARD_ON_DATA := true
-TARGET_RECOVERY_FSTAB = device/sony/kagura/recovery.fstab
+TARGET_RECOVERY_FSTAB = $(DEVICE_PATH)/recovery.fstab
 TW_THEME := portrait_hdpi
 TW_HAS_NO_RECOVERY_PARTITION := true
 TW_IGNORE_ABS_MT_TRACKING_ID := true
@@ -93,12 +96,48 @@ TW_DEFAULT_BRIGHTNESS := 230
 TW_CUSTOM_CPU_TEMP_PATH := /sys/class/thermal/thermal_zone4/temp
 TARGET_RECOVERY_QCOM_RTC_FIX := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
-TARGET_RECOVERY_DEVICE_MODULES := libbinder libgui libui libEGL libGLES_trace libGLESv2 libprotobuf-cpp-lite libsync
-TW_RECOVERY_ADDITIONAL_RELINK_FILES := $(OUT)/system/lib64/libbinder.so $(OUT)/system/lib64/libgui.so $(OUT)/system/lib64/libui.so $(OUT)/system/lib64/libEGL.so $(OUT)/system/lib64/libGLES_trace.so $(OUT)/system/lib64/libGLESv2.so $(OUT)/system/lib64/libprotobuf-cpp-lite.so $(OUT)/system/lib64/libsync.so
 
 # Include path
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
 # SELINUX
 TARGET_SKIP_SETEXECCON_VOLD_CHECK := true
-BOARD_SEPOLICY_DIRS += device/sony/kagura/sepolicy
+BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
+
+# MultiROM configuration
+MR_DEVICE_HOOKS := $(DEVICE_PATH)/multirom/mr_hooks.c
+MR_DEVICE_HOOKS_VER := 6
+MR_DEVICE_BOOTDEVICE := /dev/block/platform/soc/7464900.sdhci
+MR_DEVICE_VARIANTS := F8331 F8332
+MR_DPI := xhdpi
+MR_DPI_FONT := 340
+MR_ENCRYPTION := true
+MR_ENCRYPTION_FAKE_PROPERTIES := true
+MR_ENCRYPTION_FAKE_PROPERTIES_EXTRAS := $(DEVICE_PATH)/multirom/mr_fake_properties.c
+MR_ENCRYPTION_SETUP_SCRIPT := $(DEVICE_PATH)/multirom/mr_cp_crypto.sh
+MR_FSTAB := $(DEVICE_PATH)/recovery.fstab
+MR_INIT_DEVICES := $(DEVICE_PATH)/multirom/mr_init_devices.c
+MR_INPUT_TYPE := type_b
+MR_KEXEC_MEM_MIN := 0x86000000
+MR_NO_KEXEC := enabled
+MR_PIXEL_FORMAT := "RGBA_8888"
+MR_UNIFIED_TABS := true
+MR_USE_DEBUGFS_MOUNT := true
+MR_USE_MROM_FSTAB := true
+RECOVERY_GRAPHICS_USE_LINELENGTH := true
+
+# MultiROM build
+DEVICE_RESOLUTION := 1080x1920
+TARGET_RECOVERY_IS_MULTIROM := true
+
+# MultiROM versioning
+ifeq ($(MR_REC_VERSION),)
+MR_REC_VERSION := $(shell date -u +%Y%m%d)
+endif
+
+# MultiROM version tag
+BOARD_MKBOOTIMG_ARGS += --board mrom$(MR_REC_VERSION)
+
+# Recovery blobs
+TARGET_RECOVERY_DEVICE_MODULES := libbinder libgui libui libEGL libGLES_trace libGLESv2 libprotobuf-cpp-lite libsync
+TW_RECOVERY_ADDITIONAL_RELINK_FILES := $(OUT)/system/lib64/libbinder.so $(OUT)/system/lib64/libgui.so $(OUT)/system/lib64/libui.so $(OUT)/system/lib64/libEGL.so $(OUT)/system/lib64/libGLES_trace.so $(OUT)/system/lib64/libGLESv2.so $(OUT)/system/lib64/libprotobuf-cpp-lite.so $(OUT)/system/lib64/libsync.so
