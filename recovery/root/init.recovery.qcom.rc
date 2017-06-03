@@ -29,7 +29,6 @@ on fs
     
     # start clearpad_post_probe when filesystem is available for fwflash
     write /sys/kernel/debug/clearpad/hwtest "XP"
-    write /sys/devices/virtual/input/clearpad/post_probe_start 1
     
     # Keeping following partitions outside fstab file. As user may not have
     # these partition flashed on the device. Failure to mount any partition in fstab file
@@ -50,6 +49,10 @@ on fs
     start pulldecryptfiles
     
     symlink /firmware/image /vendor/firmware
+
+on post-fs
+    # start clearpad_post_probe when filesystem is available for fwflash
+    write /sys/devices/virtual/input/clearpad/post_probe_start 1
 
 on boot
     write /sys/class/android_usb/android0/idVendor 0FCE
