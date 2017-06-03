@@ -15,6 +15,8 @@ service pulldecryptfiles /sbin/pulldecryptfiles.sh
 
 on early-init
     mkdir /firmware 0771 system system
+    mount debugfs debugfs /sys/kernel/debug
+    chmod 0755 /sys/kernel/debug
 
 on fs
     # needed to make qseecomd work in recovery
@@ -26,6 +28,7 @@ on fs
     chown system system /dev/ion
     
     # start clearpad_post_probe when filesystem is available for fwflash
+    write /sys/kernel/debug/clearpad/hwtest "XP"
     write /sys/devices/virtual/input/clearpad/post_probe_start 1
     
     # Keeping following partitions outside fstab file. As user may not have
